@@ -1,0 +1,48 @@
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: tool-nginx
+    ports:
+      - "8082:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - tool-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tool-app
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - mysql
+    networks:
+      - tool-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: tool-mysql
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: toolbox
+      MYSQL_USER: toolbox
+      MYSQL_PASSWORD: toolbox888
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - tool-network
+
+volumes:
+  mysql-data:
+
+networks:
+  tool-network:
+    driver: bridge
