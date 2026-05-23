@@ -12,35 +12,30 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: #f6f7f9;
             color: #1e293b;
+            min-height: 100vh;
+            background: #f1f4f9;
         }
 
         /* ===== TOP NAV ===== */
         .topbar {
-            background: #ffffff;
-            border-bottom: 1px solid #eaecf0;
-            height: 60px;
             position: sticky;
             top: 0;
             z-index: 100;
-            backdrop-filter: blur(8px);
-            background: rgba(255,255,255,.92);
+            background: #ffffff;
+            border-bottom: 1px solid #e6e8ec;
+            height: 58px;
         }
         .topbar-inner {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 0 28px;
+            padding: 0 32px;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .topbar-left {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-        }
+        .topbar-left { display: flex; align-items: center; gap: 32px; }
         .topbar-brand {
             display: flex;
             align-items: center;
@@ -48,26 +43,21 @@
             text-decoration: none;
         }
         .topbar-logo {
-            width: 30px;
-            height: 30px;
-            background: #4f46e5;
-            border-radius: 7px;
+            width: 28px;
+            height: 28px;
+            background: #1e40af;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .topbar-logo svg { width: 17px; height: 17px; color: white; }
+        .topbar-logo svg { width: 16px; height: 16px; color: white; }
         .topbar-brand-text {
             font-size: 14px;
             font-weight: 600;
-            color: #1e293b;
-            letter-spacing: -.01em;
+            color: #0f172a;
         }
-        .topbar-nav {
-            display: flex;
-            align-items: center;
-            gap: 2px;
-        }
+        .topbar-nav { display: flex; align-items: center; gap: 2px; }
         .topbar-nav-item {
             padding: 6px 14px;
             border-radius: 6px;
@@ -77,37 +67,22 @@
             text-decoration: none;
             transition: all .15s;
         }
-        .topbar-nav-item:hover {
-            background: #f1f4f9;
-            color: #1e293b;
-        }
-        .topbar-nav-item.active {
-            background: #eef2ff;
-            color: #4f46e5;
-        }
-        .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .topbar-nav-item:hover { background: #f1f4f9; color: #1e293b; }
+        .topbar-nav-item.active { background: #e8edf5; color: #1e40af; }
+        .topbar-right { display: flex; align-items: center; gap: 12px; }
         .topbar-user {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 4px 12px 4px 8px;
-            border-radius: 8px;
         }
         .topbar-avatar {
-            width: 28px;
-            height: 28px;
+            width: 28px; height: 28px;
             border-radius: 6px;
-            background: #eef2ff;
+            background: #e8edf5;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 600;
-            color: #4f46e5;
+            align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 600;
+            color: #1e40af;
         }
         .topbar-name { font-size: 13px; color: #475569; font-weight: 500; }
         .topbar-logout {
@@ -127,122 +102,110 @@
         .topbar-logout svg { width: 16px; height: 16px; }
 
         /* ===== PAGE ===== */
-        .page {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 32px 28px 48px;
-        }
+        .page { max-width: 1280px; margin: 0 auto; padding: 28px 32px 48px; }
 
         /* ===== PAGE HEADER ===== */
         .page-header {
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
         .page-header h1 {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             color: #0f172a;
-            letter-spacing: -.03em;
-            line-height: 1.2;
         }
-        .page-header p {
-            font-size: 14px;
-            color: #94a3b8;
+        .page-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             margin-top: 4px;
+        }
+        .page-header p { font-size: 14px; color: #64748b; }
+        .page-header-date {
+            font-size: 13px;
+            color: #94a3b8;
         }
 
         /* ===== STATS ===== */
         .stats-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-            margin-bottom: 36px;
+            gap: 12px;
+            margin-bottom: 32px;
         }
         .stat-box {
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #eaecf0;
+            background: #ffffff;
+            border-radius: 10px;
+            border: 1px solid #e6e8ec;
             padding: 18px 22px;
+            transition: box-shadow .15s;
         }
+        .stat-box:hover { box-shadow: 0 2px 8px rgba(0,0,0,.04); }
         .stat-box-label {
-            font-size: 12px;
-            font-weight: 500;
-            color: #94a3b8;
+            font-size: 12px; font-weight: 500; color: #94a3b8;
             margin-bottom: 4px;
         }
         .stat-box-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: #0f172a;
-            letter-spacing: -.02em;
+            font-size: 20px; font-weight: 700; color: #0f172a;
         }
         .stat-box-value.email {
-            font-size: 13px;
-            font-weight: 500;
-            color: #64748b;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            font-size: 13px; font-weight: 500; color: #64748b;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
 
         /* ===== SECTION ===== */
         .section-label {
             font-size: 11px;
             font-weight: 600;
-            letter-spacing: .06em;
+            letter-spacing: .05em;
             text-transform: uppercase;
             color: #94a3b8;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         /* ===== TOOL CARDS ===== */
         .tool-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 14px;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 12px;
         }
         .tool-card {
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #eaecf0;
+            background: #ffffff;
+            border-radius: 10px;
+            border: 1px solid #e6e8ec;
             padding: 20px;
             text-decoration: none;
-            transition: all .2s ease;
             display: block;
-            position: relative;
+            transition: all .2s ease;
         }
         .tool-card:hover {
-            border-color: #dbeafe;
-            box-shadow: 0 4px 20px rgba(37,99,235,.06);
-            transform: translateY(-2px);
+            border-color: #bfdbfe;
+            box-shadow: 0 4px 16px rgba(30,64,175,.06);
+            transform: translateY(-1px);
         }
         .tool-card-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 38px; height: 38px;
+            border-radius: 9px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
+            align-items: center; justify-content: center;
+            font-size: 17px;
             margin-bottom: 14px;
         }
         .tool-card-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #0f172a;
-            margin-bottom: 4px;
+            font-size: 14px; font-weight: 600; color: #0f172a;
+            margin-bottom: 3px;
             transition: color .15s;
         }
-        .tool-card:hover .tool-card-title { color: #4f46e5; }
+        .tool-card:hover .tool-card-title { color: #1e40af; }
         .tool-card-desc {
-            font-size: 12px;
-            color: #94a3b8;
+            font-size: 12px; color: #94a3b8;
             line-height: 1.5;
+            overflow: hidden;
+            text-overflow: ellipsis;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            overflow: hidden;
         }
-        .tool-card-arrow {
+        .tool-card-meta {
             margin-top: 14px;
             display: flex;
             align-items: center;
@@ -252,27 +215,22 @@
             color: #cbd5e1;
             transition: all .2s;
         }
-        .tool-card:hover .tool-card-arrow { color: #4f46e5; }
-        .tool-card-arrow svg {
-            width: 14px;
-            height: 14px;
+        .tool-card:hover .tool-card-meta { color: #1e40af; }
+        .tool-card-meta svg {
+            width: 14px; height: 14px;
             transition: transform .2s;
         }
-        .tool-card:hover .tool-card-arrow svg { transform: translateX(3px); }
+        .tool-card:hover .tool-card-meta svg { transform: translateX(3px); }
 
         /* ===== EMPTY ===== */
         .empty-box {
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #eaecf0;
+            background: #ffffff;
+            border-radius: 10px;
+            border: 1px solid #e6e8ec;
             padding: 52px 20px;
             text-align: center;
         }
-        .empty-box svg {
-            width: 36px; height: 36px;
-            color: #e2e8f0;
-            margin-bottom: 10px;
-        }
+        .empty-box svg { width: 36px; height: 36px; color: #d1d5db; margin-bottom: 10px; }
         .empty-box p { font-size: 13px; color: #94a3b8; }
         .empty-box .sub { font-size: 12px; color: #cbd5e1; margin-top: 2px; }
     </style>
@@ -322,7 +280,10 @@
         <!-- Page Header -->
         <div class="page-header">
             <h1>工具首页</h1>
-            <p>欢迎回来，{{ Auth::user()->name }}</p>
+            <div class="page-header-row">
+                <p>欢迎回来，{{ Auth::user()->name }}</p>
+                <span class="page-header-date">{{ now()->format('Y 年 n 月 j 日') }}</span>
+            </div>
         </div>
 
         <!-- Stats -->
@@ -356,15 +317,15 @@
             <div class="tool-cards">
                 @foreach($tools as $tool)
                     <a href="{{ $tool->route }}" class="tool-card">
-                        <div class="tool-card-icon" style="background:{{ $tool->color }}12;">
+                        <div class="tool-card-icon" style="background:{{ $tool->color }}10;">
                             <span style="color:{{ $tool->color }}">{{ $tool->icon }}</span>
                         </div>
                         <div class="tool-card-title">{{ $tool->name }}</div>
                         @if($tool->description)
                             <div class="tool-card-desc">{{ $tool->description }}</div>
                         @endif
-                        <div class="tool-card-arrow">
-                            进入 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                        <div class="tool-card-meta">
+                            进入工具 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                         </div>
                     </a>
                 @endforeach
