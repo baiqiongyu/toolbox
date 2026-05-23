@@ -52,6 +52,10 @@
             font-size: 11px; font-weight: 600; color: #1e40af;
         }
         .topbar-name { font-size: 13px; color: #475569; font-weight: 500; }
+        .topbar-user { display: flex; align-items: center; gap: 8px; }
+        .topbar-logout { padding: 6px 10px; border-radius: 6px; border: none; background: none; color: #94a3b8; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; transition: all .15s; }
+        .topbar-logout:hover { background: #fef2f2; color: #ef4444; }
+        .topbar-logout svg { width: 16px; height: 16px; }
 
         /* ===== PAGE ===== */
         .page { max-width: 1280px; margin: 0 auto; padding: 28px 32px 48px; }
@@ -312,6 +316,19 @@
                     <a href="{{ route('dashboard') }}" class="topbar-nav-item">工具首页</a>
                     <a href="" class="topbar-nav-item active">PCC 校验</a>
                 </nav>
+            </div>
+            <div class="topbar-right">
+                <div class="topbar-user">
+                    <div class="topbar-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                    <span class="topbar-name">{{ Auth::user()->name }}</span>
+                </div>
+                <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="topbar-logout">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>
+                        退出
+                    </button>
+                </form>
             </div>
         </div>
     </header>
