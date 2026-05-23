@@ -23,7 +23,7 @@ class ToolSeeder extends Seeder
             'icon' => '📦',
             'route' => '/tools/rakuten',
             'color' => '#e67e22',
-            'description' => '查询日本乐天物流配送轨迹信息',
+            'description' => '查询韩国乐天物流(Lotte)配送轨迹信息',
             'sort_order' => 2,
         ]);
 
@@ -34,6 +34,15 @@ class ToolSeeder extends Seeder
             'color' => '#9b59b6',
             'description' => '查询跨境包裹清关状态及通关进度',
             'sort_order' => 3,
+        ]);
+
+        Tool::create([
+            'name' => '华磊轨迹查询',
+            'icon' => '🚚',
+            'route' => '/tools/hualei',
+            'color' => '#059669',
+            'description' => '华磊物流快递单号轨迹查询',
+            'sort_order' => 4,
         ]);
     }
 }
