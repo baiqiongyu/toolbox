@@ -4,39 +4,40 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Toolbox') }} - 登录</title>
-
+    <title>易和国际物流 · 内部工具平台</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        /* 全局背景色 */
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    </style>
 </head>
-<body class="font-sans antialiased" style="font-family: 'Inter', sans-serif;">
+<body class="font-sans antialiased">
     <div class="min-h-screen flex">
         <!-- 左侧品牌区域 -->
         <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 relative overflow-hidden">
-            <!-- 背景装饰 -->
             <div class="absolute inset-0 opacity-10">
                 <div class="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-white"></div>
                 <div class="absolute -bottom-20 -left-20 w-60 h-60 rounded-full bg-white"></div>
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-white blur-3xl"></div>
             </div>
-
-            <!-- 网格装饰 -->
             <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 40px 40px;"></div>
 
             <div class="relative z-10 flex flex-col justify-center px-16 py-20">
-                <div class="mb-12">
-                    <div class="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur rounded-2xl mb-8">
-                        <span class="text-3xl">🧰</span>
+                <div class="mb-10">
+                    <!-- Logo -->
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-white/15 backdrop-blur rounded-2xl mb-6 shadow-lg">
+                        <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M20.25 14.15v4.25c0 1.1-.9 2-2 2H5.74c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h7.52"/>
+                            <path d="M16.5 3.75h3.75v3.75"/>
+                            <path d="M10.5 13.5l3-3 3 3"/>
+                            <path d="M12 10.5v6"/>
+                        </svg>
                     </div>
-                    <h1 class="text-4xl font-bold text-white mb-4 leading-tight">
-                        内部工具平台
-                    </h1>
-                    <p class="text-blue-100 text-lg leading-relaxed">
-                        高效 · 安全 · 一体化<br>
-                        公司内部业务工具统一入口
-                    </p>
+                    <!-- 公司名 -->
+                    <h1 class="text-3xl font-bold text-white mb-1">易和国际物流</h1>
+                    <p class="text-blue-200 text-base">内部工具平台</p>
                 </div>
 
                 <div class="space-y-6">
@@ -80,36 +81,52 @@
         <!-- 右侧登录表单 -->
         <div class="flex-1 flex items-center justify-center px-6 py-12 bg-gray-50">
             <div class="w-full max-w-md">
-                <!-- Logo 移动端显示 -->
+                <!-- 移动端 -->
                 <div class="lg:hidden text-center mb-10">
                     <div class="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl mb-4 shadow-lg">
-                        <span class="text-2xl">🧰</span>
+                        <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M20.25 14.15v4.25c0 1.1-.9 2-2 2H5.74c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h7.52"/>
+                            <path d="M16.5 3.75h3.75v3.75"/>
+                            <path d="M10.5 13.5l3-3 3 3"/>
+                            <path d="M12 10.5v6"/>
+                        </svg>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-900">内部工具平台</h2>
-                    <p class="text-gray-500 mt-1">请登录您的账号</p>
+                    <h2 class="text-xl font-bold text-gray-900">易和国际物流</h2>
+                    <p class="text-gray-400 text-sm mt-0.5">内部工具平台</p>
+                    <p class="text-gray-500 text-sm mt-3">请登录您的账号</p>
                 </div>
 
                 <!-- 桌面端标题 -->
-                <div class="hidden lg:block mb-10">
-                    <h2 class="text-3xl font-bold text-gray-900">欢迎回来</h2>
-                    <p class="text-gray-500 mt-2">请登录您的账号以继续</p>
+                <div class="hidden lg:block mb-8">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-sm">
+                            <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M20.25 14.15v4.25c0 1.1-.9 2-2 2H5.74c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h7.52"/>
+                                <path d="M16.5 3.75h3.75v3.75"/>
+                                <path d="M10.5 13.5l3-3 3 3"/>
+                                <path d="M12 10.5v6"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold text-gray-900">易和国际物流</h2>
+                            <p class="text-xs text-gray-400">内部工具平台</p>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900">欢迎回来</h3>
+                    <p class="text-gray-500 mt-1.5">请登录您的账号以继续</p>
                 </div>
 
-                <!-- Session Status -->
                 @if (session('status'))
                     <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                         <p class="text-sm text-green-700">{{ session('status') }}</p>
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('login') }}" class="space-y-6">
+                <form method="POST" action="{{ route('login') }}" class="space-y-5">
                     @csrf
 
-                    <!-- Email -->
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">
-                            邮箱地址
-                        </label>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">邮箱地址</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,11 +142,8 @@
                         @enderror
                     </div>
 
-                    <!-- Password -->
                     <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1.5">
-                            密码
-                        </label>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1.5">密码</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -145,7 +159,6 @@
                         @enderror
                     </div>
 
-                    <!-- Remember & Forgot -->
                     <div class="flex items-center justify-between">
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input id="remember_me" type="checkbox" name="remember"
@@ -154,7 +167,6 @@
                         </label>
                     </div>
 
-                    <!-- Submit Button -->
                     <button type="submit"
                         class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         登 录
@@ -162,7 +174,7 @@
                 </form>
 
                 <p class="mt-8 text-center text-xs text-gray-400">
-                    &copy; {{ date('Y') }} 内部工具平台 · 保留所有权利
+                    &copy; {{ date('Y') }} 易和国际物流 · 内部工具平台
                 </p>
             </div>
         </div>
