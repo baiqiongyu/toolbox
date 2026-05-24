@@ -26,6 +26,7 @@ Route::middleware(['auth'])->prefix('tools')->group(function () {
     Route::get('/pcc/status/{taskId}', [PccController::class, 'status'])->name('tools.pcc.status');
     Route::get('/pcc/download/{downloadId}', [PccController::class, 'download'])->name('tools.pcc.download');
     Route::get('/pcc/download-fail/{downloadId}', [PccController::class, 'downloadFail'])->name('tools.pcc.downloadFail');
+    Route::post('/pcc/check-single', [PccController::class, 'checkSingle'])->name('tools.pcc.checkSingle');
     Route::get('/rakuten', [RakutenController::class, 'index'])->name('tools.rakuten');
     Route::post('/rakuten/track', [RakutenController::class, 'track'])->name('tools.rakuten.track');
     Route::get('/customs', [CustomsController::class, 'index'])->name('tools.customs');

@@ -160,6 +160,113 @@ class PccController extends Controller
     // ========================================================================
 
     /**
+     * 手动单个校验：输入 PCC/姓名/电话/邮编，实时查看 API 原始返回
+     */
+    public function checkSingle(Request $request)
+    {
+        $request->validate([
+            'pcc'   => 'required|string|max:20',
+            'name'  => 'required|string|max:100',
+            'phone' => 'required|string|max:20',
+            'zip'   => 'required|string|max:10',
+        ]);
+
+        $pcc  = trim($request->input('pcc'));
+        $name = trim($request->input('name'));
+        $phone = trim($request->input('phone'));
+        $zip  = trim($request->input('zip'));
+
+        if (!preg_match('/^P[A-Z0-9]{12}$/i', $pcc)) {
+            return response()->json(['success' => false, 'message' => 'PCC 格式错误：需以P开头且13位']);
+        }
+        $cleanPhone = preg_replace('/[\s-]/', '', $phone);
+        if (!preg_match('/^\d{10,11}$/', $cleanPhone)) {
+            return response()->json(['success' => false, 'message' => '电话格式错误']);
+        }
+
+        try {
+            // 构建请求参数（匹配 verify_pcc.py 脚本）
+            $params = http_build_query([
+                'crkyCn'    => 'e220w270s066w370y070x050d0',
+                'persEcm'   => $pcc,
+                'pltxNm'    => $name,
+                'cralTelno' => $cleanPhone,
+                'custPsno'  => $zip,
+            ]);
+            $queryUrl = 'https://unipass.customs.go.kr:38010/ext/rest/persEcmQry/retrievePersEcm?' . $params;
+
+            // 使用 file_get_contents + stream context
+            $body = false;
+            for ($attempt = 0; $attempt <= 2; $attempt++) {
+                if ($attempt > 0) usleep(1000000 * $attempt);
+
+                $ctx = stream_context_create(['ssl' => [
+                    'verify_peer'      => false,
+                    'verify_peer_name'  => false,
+                ], 'http' => [
+                    'timeout' => 15,
+                    'user_agent' => 'Mozilla/5.0',
+                ]]);
+
+                try {
+                    $body = @file_get_contents($queryUrl, false, $ctx);
+                    if ($body !== false) break;
+                } catch (\Exception $e) {
+                    $body = false;
+                }
+            }
+
+            if ($body === false) {
+                return response()->json(['success' => false, 'message' => 'API 请求失败：请联系管理员检查网络', 'raw' => null]);
+            }
+
+            $xml = simplexml_load_string($body);
+            $tCnt = $xml ? (string)$xml->tCnt : '0';
+
+            // 提取并翻译错误信息
+            $errMsg = '';
+            // ntceInfo 是常见错误消息节点，persEcmQryRtnErrInfoVo->errMsgCn 是另一格式
+            $rawErr = '';
+            if ($xml && isset($xml->ntceInfo)) {
+                $rawErr = (string)$xml->ntceInfo;
+            } elseif ($xml && isset($xml->persEcmQryRtnErrInfoVo->errMsgCn)) {
+                $rawErr = (string)$xml->persEcmQryRtnErrInfoVo->errMsgCn;
+            }
+            if ($rawErr) {
+                $errMsg = $this->translatePccError($rawErr);
+            }
+
+            return response()->json([
+                'success' => $tCnt === '1',
+                'message' => $tCnt === '1' ? '✅ 验证通过' : '❌ ' . ($errMsg ?: '姓名/电话/邮编不匹配'),
+                'tCnt'    => $tCnt,
+                'raw'     => $body,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => '异常：' . $e->getMessage(), 'raw' => null]);
+        }
+    }
+
+    /**
+     * 翻译韩国海关 API 返回的韩文错误信息
+     */
+    private function translatePccError(string $ko): string
+    {
+        $trimmed = rtrim($ko, '. ');
+        $map = [
+            '존재하지 않는 인증키입니다' => 'API 认证密钥无效',
+            '존재하지 않은 인증키입니다' => 'API 认证密钥无效',
+            '유효하지 않은 인증키입니다' => 'API 认证密钥已失效',
+            '권한이 없습니다' => '无权限访问',
+            '조회된 결과가 없습니다' => '未查询到结果',
+            '필수 입력값이 누락되었습니다' => '必填参数缺失',
+            '데이터를 찾을 수 없습니다' => '未找到数据',
+            '정보 불일치' => '信息不匹配',
+        ];
+        return $map[$trimmed] ?? $ko;
+    }
+
+    /**
      * 核心处理逻辑：逐条校验 PCC 编码
      * 
      * @param string $taskId   任务 ID
@@ -218,40 +325,76 @@ class PccController extends Controller
                 $done++; $this->updateTask($taskId, $done, $details, $total); continue;
             }
 
+            // 韩国手机号：去掉横线空格后应为 10~11 位数字
+            $cleanPhone = preg_replace('/[\s-]/', '', $phone);
+            if (!preg_match('/^\d{10,11}$/', $cleanPhone)) {
+                $details[] = ['row' => $i + 2, 'pcc' => $pcc, 'hname' => $name, 'status' => 'fail', 'msg' => '电话格式错误'];
+                $done++; $this->updateTask($taskId, $done, $details, $total); continue;
+            }
+
             // ---------- 调用韩国海关 UNI-PASS API ----------
 
             $ok  = false;   // 是否校验通过
             $msg = '';      // 校验结果描述
 
             try {
-                // Http::timeout(10)->get(...) 是 Laravel 的 HTTP 客户端
-                // timeout(10) 表示10秒超时
-                // get() 表示 GET 请求，参数通过数组传进去
-                $response = Http::timeout(10)->get('https://unipass.customs.go.kr:38010/ext/rest/persEcmQry/retrievePersEcm', [
-                    'crkyCn'   => 'w270p240e076b360l000j000t0',   // API 密钥
-                    'persEcm'  => $pcc,                            // PCC 编码
-                    'pltxNm'   => $name,                           // 韩文名
-                    'cralTelno' => preg_replace('/[\s-]/', '', $phone),  // 电话（去掉空格和横线）
-                    'custPsno' => $zipcode,                        // 邮编
+                // 构建请求参数（匹配 verify_pcc.py 脚本）
+                $params = http_build_query([
+                    'crkyCn'    => 'e220w270s066w370y070x050d0',
+                    'persEcm'   => $pcc,
+                    'pltxNm'    => $name,
+                    'cralTelno' => $cleanPhone,
+                    'custPsno'  => $zipcode,
                 ]);
+                $queryUrl = 'https://unipass.customs.go.kr:38010/ext/rest/persEcmQry/retrievePersEcm?' . $params;
 
-                // API 返回的是 XML 格式，用 simplexml_load_string() 解析
-                $xml = simplexml_load_string($response->body());
+                // 每条记录之间间隔 500ms，避免触发 API 限流
+                usleep(500000);
 
-                // tCnt 为 1 表示验证通过
-                if ($xml && (string)$xml->tCnt === '1') {
-                    $ok  = true;
-                    $msg = '验证通过';
-                } else {
-                    // 如果 API 返回了错误信息，提取出来展示
-                    $errMsg = '';
-                    if ($xml && isset($xml->persEcmQryRtnErrInfoVo->errMsgCn)) {
-                        $errMsg = (string)$xml->persEcmQryRtnErrInfoVo->errMsgCn;
+                // 使用 file_get_contents + stream context（匹配 verify_pcc.py 的 urllib 方式）
+                $body = false;
+                for ($attempt = 0; $attempt <= 2; $attempt++) {
+                    if ($attempt > 0) usleep(1500000 * $attempt);
+
+                    $ctx = stream_context_create(['ssl' => [
+                        'verify_peer'      => false,
+                        'verify_peer_name'  => false,
+                    ], 'http' => [
+                        'timeout' => 15,
+                        'user_agent' => 'Mozilla/5.0',
+                    ]]);
+
+                    try {
+                        $body = @file_get_contents($queryUrl, false, $ctx);
+                        if ($body !== false) break;
+                    } catch (\Exception $e) {
+                        $body = false;
                     }
-                    $msg = $errMsg ? "校验失败：{$errMsg}" : '校验失败：姓名/电话/邮编不匹配';
+                }
+
+                if ($body === false) {
+                    $msg = 'API 请求失败：请检查网络';
+                } else {
+                    $xml = simplexml_load_string($body);
+
+                    if ($xml && (string)$xml->tCnt === '1') {
+                        $ok  = true;
+                        $msg = '验证通过';
+                    } else {
+                        $errMsg = '';
+                        $rawErr = '';
+                        if ($xml && isset($xml->ntceInfo)) {
+                            $rawErr = (string)$xml->ntceInfo;
+                        } elseif ($xml && isset($xml->persEcmQryRtnErrInfoVo->errMsgCn)) {
+                            $rawErr = (string)$xml->persEcmQryRtnErrInfoVo->errMsgCn;
+                        }
+                        if ($rawErr) {
+                            $errMsg = $this->translatePccError($rawErr);
+                        }
+                        $msg = $errMsg ? "校验失败：{$errMsg}" : '校验失败：姓名/电话/邮编不匹配';
+                    }
                 }
             } catch (\Exception $e) {
-                // 网络超时或其它异常
                 $msg = 'API 请求异常：' . $e->getMessage();
             }
 

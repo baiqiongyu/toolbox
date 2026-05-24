@@ -89,6 +89,58 @@
             color: #1e40af;
         }
 
+        /* ===== SINGLE CHECK ===== */
+        .single-check {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e6e8ec;
+        }
+        .single-check h3 {
+            font-size: 13px; font-weight: 600; color: #0f172a;
+            margin-bottom: 12px;
+        }
+        .sc-field {
+            margin-bottom: 10px;
+        }
+        .sc-field label {
+            display: block;
+            font-size: 12px; font-weight: 500; color: #64748b;
+            margin-bottom: 3px;
+        }
+        .sc-field input {
+            width: 100%; padding: 7px 10px; border-radius: 6px;
+            border: 1px solid #d1d5db; font-size: 13px;
+            font-family: inherit; color: #1e293b;
+            transition: border-color .15s;
+        }
+        .sc-field input:focus {
+            outline: none; border-color: #1e40af;
+            box-shadow: 0 0 0 2px rgba(30,64,175,.1);
+        }
+        .sc-btn {
+            width: 100%; padding: 8px; border-radius: 6px;
+            border: none; background: #1e40af; color: white;
+            font-size: 13px; font-weight: 500; cursor: pointer;
+            font-family: inherit; transition: all .15s;
+        }
+        .sc-btn:hover { background: #1e3a8a; }
+        .sc-btn:disabled { opacity: .5; cursor: not-allowed; }
+        .sc-result {
+            margin-top: 12px; padding: 10px 12px;
+            border-radius: 6px; font-size: 12px;
+            display: none; line-height: 1.6;
+        }
+        .sc-result.show { display: block; }
+        .sc-result.pass { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+        .sc-result.fail { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+        .sc-result.loading { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+        .sc-result pre {
+            margin-top: 8px; padding: 8px; border-radius: 4px;
+            background: #f8fafc; font-size: 11px;
+            overflow-x: auto; white-space: pre-wrap; word-break: break-all;
+            max-height: 200px; overflow-y: auto;
+        }
+
         /* ===== MAIN CARD ===== */
         .maincard {
             background: #ffffff;
@@ -288,6 +340,29 @@
                     <li><span class="dot warning"></span>后台异步处理，可安心等待</li>
                 </ul>
 
+                <!-- 手动单条校验 -->
+                <div class="single-check">
+                    <h3>🔍 单条手动校验</h3>
+                    <div class="sc-field">
+                        <label>通关编码(PCC)</label>
+                        <input type="text" id="scPcc" placeholder="P190033637410">
+                    </div>
+                    <div class="sc-field">
+                        <label>韩文名</label>
+                        <input type="text" id="scName" placeholder="이제규">
+                    </div>
+                    <div class="sc-field">
+                        <label>电话</label>
+                        <input type="text" id="scPhone" placeholder="01022018450">
+                    </div>
+                    <div class="sc-field">
+                        <label>邮编</label>
+                        <input type="text" id="scZip" placeholder="5位数字">
+                    </div>
+                    <button class="sc-btn" id="scBtn" onclick="checkSingle()">开始校验</button>
+                    <div class="sc-result" id="scResult"></div>
+                </div>
+
                 <h3 style="margin-top:20px;">Excel 格式要求</h3>
                 <ul>
                     <li><span class="badge">A</span> 通关编码(PCC)</li>
@@ -482,6 +557,56 @@
         es.style.display = 'block';
     }
     function hideError() { es.style.display = 'none'; }
+
+    // ===== 手动单条校验 =====
+    function checkSingle() {
+        const btn = document.getElementById('scBtn');
+        const res = document.getElementById('scResult');
+        const pcc = document.getElementById('scPcc').value.trim();
+        const name = document.getElementById('scName').value.trim();
+        const phone = document.getElementById('scPhone').value.trim();
+        const zip = document.getElementById('scZip').value.trim();
+
+        if (!pcc || !name || !phone || !zip) {
+            res.className = 'sc-result show fail';
+            res.innerHTML = '请填写完整信息';
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = '校验中...';
+        res.className = 'sc-result show loading';
+        res.innerHTML = '正在调海关 API...';
+
+        fetch('/tools/pcc/check-single', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content,'Accept':'application/json'},
+            body: JSON.stringify({pcc, name, phone, zip})
+        })
+        .then(r => r.json())
+        .then(d => {
+            const pass = d.success;
+            res.className = 'sc-result show ' + (pass ? 'pass' : 'fail');
+            let html = '<strong>' + d.message + '</strong>';
+            if (d.tCnt !== undefined) html += '<br>tCnt: ' + d.tCnt;
+            if (d.raw) html += '<pre>' + escHtml(d.raw) + '</pre>';
+            res.innerHTML = html;
+        })
+        .catch(e => {
+            res.className = 'sc-result show fail';
+            res.innerHTML = '请求失败：' + e.message;
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.textContent = '开始校验';
+        });
+    }
+
+    function escHtml(str) {
+        const d = document.createElement('div');
+        d.textContent = str;
+        return d.innerHTML;
+    }
     </script>
 </body>
 </html>
