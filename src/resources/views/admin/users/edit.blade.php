@@ -14,53 +14,6 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
             color: #1e293b; min-height: 100vh; background: #f1f4f9;
         }
-        .topbar {
-            position: sticky; top: 0; z-index: 100;
-            background: #fff; border-bottom: 1px solid #e6e8ec; height: 58px;
-        }
-        .topbar-inner {
-            max-width: 1280px; margin: 0 auto; padding: 0 32px;
-            height: 100%; display: flex; align-items: center; justify-content: space-between;
-        }
-        .topbar-left { display: flex; align-items: center; gap: 32px; }
-        .topbar-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .topbar-logo {
-            width: 28px; height: 28px; background: #1e40af; border-radius: 6px;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .topbar-logo svg { width: 16px; height: 16px; color: white; }
-        .topbar-brand-text { font-size: 14px; font-weight: 600; color: #0f172a; }
-        .topbar-nav { display: flex; align-items: center; gap: 2px; }
-        .topbar-nav-item {
-            padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 500;
-            color: #64748b; text-decoration: none; transition: all .15s;
-        }
-        .topbar-nav-item:hover { background: #f1f4f9; color: #1e293b; }
-        .topbar-nav-item.active { background: #e8edf5; color: #1e40af; }
-        .topbar-right { display: flex; align-items: center; gap: 12px; }
-        .topbar-user { display: flex; align-items: center; gap: 8px; }
-        .topbar-avatar {
-            width: 28px; height: 28px; border-radius: 6px; background: #e8edf5;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 11px; font-weight: 600; color: #1e40af;
-        }
-        .topbar-name { font-size: 13px; color: #475569; font-weight: 500; }
-        .topbar-logout {
-            padding: 6px 10px; border-radius: 6px; border: none; background: none;
-            color: #94a3b8; cursor: pointer; font-size: 13px;
-            display: flex; align-items: center; gap: 6px; transition: all .15s;
-        }
-        .topbar-logout:hover { background: #fef2f2; color: #ef4444; }
-        .topbar-logout svg { width: 16px; height: 16px; }
-        .page { max-width: 680px; margin: 0 auto; padding: 28px 32px 48px; }
-        .page-header { margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
-        .page-header h1 { font-size: 22px; font-weight: 700; color: #0f172a; }
-        .page-header .back-link {
-            color: #94a3b8; font-size: 14px; text-decoration: none;
-            display: flex; align-items: center; gap: 4px;
-        }
-        .page-header .back-link:hover { color: #64748b; }
-
         .card {
             background: #fff; border-radius: 10px; border: 1px solid #e6e8ec;
             padding: 28px 32px;
@@ -118,47 +71,21 @@
             background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px;
             padding: 10px 14px; font-size: 12px; color: #92400e; margin-bottom: 20px;
         }
+
+        /* ===== PAGE ===== */
+        .page { max-width: 680px; margin: 0 auto; padding: 28px 32px 48px; }
+        .page-header { margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+        .page-header h1 { font-size: 22px; font-weight: 700; color: #0f172a; }
+        .page-header .back-link {
+            color: #94a3b8; font-size: 14px; text-decoration: none;
+            display: flex; align-items: center; gap: 4px;
+        }
+        .page-header .back-link:hover { color: #64748b; }
     </style>
 </head>
 <body>
-    <header class="topbar">
-        <div class="topbar-inner">
-            <div class="topbar-left">
-                <a href="{{ route('dashboard') }}" class="topbar-brand">
-                    <div class="topbar-logo">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M20.25 14.15v4.25c0 1.1-.9 2-2 2H5.74c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h7.52"/>
-                            <path d="M16.5 3.75h3.75v3.75"/>
-                            <path d="M10.5 13.5l3-3 3 3"/>
-                            <path d="M12 10.5v6"/>
-                        </svg>
-                    </div>
-                    <span class="topbar-brand-text">易和国际物流</span>
-                </a>
-                <nav class="topbar-nav">
-                    <a href="{{ route('dashboard') }}" class="topbar-nav-item">工具首页</a>
-                    <a href="{{ route('admin.users.index') }}" class="topbar-nav-item active">用户管理</a>
-                </nav>
-            </div>
-            <div class="topbar-right">
-                <div class="topbar-user">
-                    <div class="topbar-avatar">{{ substr(Auth::user()->name, 0, 1) }}</div>
-                    <span class="topbar-name">{{ Auth::user()->name }}</span>
-                </div>
-                <form method="POST" action="{{ route('logout') }}" style="display:inline;">
-                    @csrf
-                    <button type="submit" class="topbar-logout">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/>
-                        </svg>
-                        退出
-                    </button>
-                </form>
-            </div>
-        </div>
-    </header>
-
-    <div class="page">
+    @include('partials.nav')
+<div class="page">
         <div class="page-header">
             <a href="{{ route('admin.users.index') }}" class="back-link">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
