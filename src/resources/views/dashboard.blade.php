@@ -254,6 +254,9 @@
                 </a>
                 <nav class="topbar-nav">
                     <a href="{{ route('dashboard') }}" class="topbar-nav-item active">工具首页</a>
+                    @if(Auth::user()->is_admin)
+                        <a href="{{ route('admin.users.index') }}" class="topbar-nav-item">用户管理</a>
+                    @endif
                 </nav>
             </div>
             <div class="topbar-right">

@@ -22,6 +22,11 @@
                 <a href="{{ route('dashboard') }}" class="ml-4 px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 rounded-md">
                     工具首页
                 </a>
+                @if(Auth::user()->is_admin)
+                    <a href="{{ route('admin.users.index') }}" class="ml-1 px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                        用户管理
+                    </a>
+                @endif
             </div>
 
             <!-- 右侧 -->
