@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\QueryLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -78,6 +79,7 @@ class CustomsController extends Controller
 
             if ($body === false || $httpCode !== 200) {
                 $errMsg = $curlErr ?: "HTTP {$httpCode}";
+                QueryLog::create(['user_id' => auth()->id(), 'tool' => 'customs', 'query_key' => $trackingNo, 'status' => 'failed']);
                 return response()->json([
                     'success' => false,
                     'message' => '韩国海关 API 连接失败：' . $errMsg,
@@ -86,17 +88,20 @@ class CustomsController extends Controller
 
             $xml = simplexml_load_string($body);
             if ($xml === false) {
+                QueryLog::create(['user_id' => auth()->id(), 'tool' => 'customs', 'query_key' => $trackingNo, 'status' => 'failed']);
                 return response()->json(['success' => false, 'message' => '海关返回数据格式异常']);
             }
 
             // 检查错误
             if (isset($xml->cargCsclPrgsInfoQryRtnErrInfoVo)) {
                 $errMsg = (string)($xml->cargCsclPrgsInfoQryRtnErrInfoVo->errMsgCn ?? '查询失败');
+                QueryLog::create(['user_id' => auth()->id(), 'tool' => 'customs', 'query_key' => $trackingNo, 'status' => 'failed']);
                 return response()->json(['success' => false, 'message' => $errMsg]);
             }
 
             // 检查是否有详细轨迹
             if (!isset($xml->cargCsclPrgsInfoDtlQryVo)) {
+                QueryLog::create(['user_id' => auth()->id(), 'tool' => 'customs', 'query_key' => $trackingNo, 'status' => 'failed']);
                 return response()->json(['success' => false, 'message' => '未找到该单号的清关信息']);
             }
 
@@ -159,6 +164,7 @@ class CustomsController extends Controller
             }
 
             if (empty($history)) {
+                QueryLog::create(['user_id' => auth()->id(), 'tool' => 'customs', 'query_key' => $trackingNo, 'status' => 'failed']);
                 return response()->json(['success' => false, 'message' => '该单号暂无清关轨迹']);
             }
 
@@ -168,6 +174,8 @@ class CustomsController extends Controller
             $last = end($history);
             // 如果有主单状态则优先用主单状态
             $displayStatus = $currentStatus ?: $last['status_ko'];
+
+            QueryLog::create(['user_id' => auth()->id(), 'tool' => 'customs', 'query_key' => $trackingNo, 'status' => 'success', 'result_count' => count($history)]);
 
             return response()->json([
                 'success'        => true,
@@ -181,6 +189,7 @@ class CustomsController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            QueryLog::create(['user_id' => auth()->id(), 'tool' => 'customs', 'query_key' => $trackingNo, 'status' => 'failed']);
             return response()->json([
                 'success' => false,
                 'message' => '查询异常：' . $e->getMessage(),

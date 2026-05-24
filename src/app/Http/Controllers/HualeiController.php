@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\QueryLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -59,6 +60,7 @@ class HualeiController extends Controller
             }
 
             if (!$result) {
+                QueryLog::create(['user_id' => auth()->id(), 'tool' => 'hualei', 'query_key' => $trackingNo, 'status' => 'failed']);
                 return response()->json([
                     'success' => false,
                     'message' => '未找到该单号的物流信息，请稍后重试',
@@ -75,6 +77,7 @@ class HualeiController extends Controller
             }
 
             if (!$item || empty($item['trackDetails'])) {
+                QueryLog::create(['user_id' => auth()->id(), 'tool' => 'hualei', 'query_key' => $trackingNo, 'status' => 'failed']);
                 return response()->json([
                     'success' => false,
                     'message' => '该单号暂无轨迹信息',
@@ -104,6 +107,8 @@ class HualeiController extends Controller
 
             $last = end($history);
 
+            QueryLog::create(['user_id' => auth()->id(), 'tool' => 'hualei', 'query_key' => $trackingNo, 'status' => 'success', 'result_count' => count($history)]);
+
             return response()->json([
                 'success'     => true,
                 'tracking_no' => $trackingNo,
@@ -112,6 +117,7 @@ class HualeiController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            QueryLog::create(['user_id' => auth()->id(), 'tool' => 'hualei', 'query_key' => $trackingNo, 'status' => 'failed']);
             return response()->json([
                 'success' => false,
                 'message' => '查询异常：' . $e->getMessage(),

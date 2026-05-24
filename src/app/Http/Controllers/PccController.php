@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\QueryLog;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;      // 用于读取 Excel 文件
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;     // 用于生成 Excel 文件
@@ -89,6 +90,9 @@ class PccController extends Controller
         dispatch(function () use ($taskId, $dataRows) {
             $this->processTask($taskId, $dataRows);
         })->afterResponse();
+
+        // 记录查询日志
+        QueryLog::create(['user_id' => auth()->id(), 'tool' => 'pcc', 'query_key' => $request->file('file')->getClientOriginalName(), 'status' => 'success', 'result_count' => $total]);
 
         // ===== 7. 立刻返回 task_id 给前端 =====
         // 前端拿着这个 task_id，通过 /tools/pcc/status/{taskId} 轮询进度
