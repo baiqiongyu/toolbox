@@ -13,7 +13,7 @@
                         </svg>
                     </div>
                     <div class="hidden sm:block">
-                        <div class="text-sm font-medium text-gray-700">易和国际物流</div>
+                        <div class="text-sm font-medium text-gray-700">和兴国际物流</div>
                         <div class="text-[10px] text-gray-400 tracking-wide leading-none">内部工具平台</div>
                     </div>
                 </a>

@@ -128,7 +128,7 @@
                     </svg>
                 </div>
                 <div class="topbar-brand-text">
-                    <div class="topbar-brand-name">易和国际物流</div>
+                    <div class="topbar-brand-name">和兴国际物流</div>
                     <div class="topbar-brand-sub">内部工具平台</div>
                 </div>
             </a>

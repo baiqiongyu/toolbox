@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>易和国际物流 · 内部工具平台</title>
+    <title>和兴国际物流 · 内部工具平台</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -36,7 +36,7 @@
                         </svg>
                     </div>
                     <!-- 公司名 -->
-                    <h1 class="text-3xl font-bold text-white mb-1">易和国际物流</h1>
+                    <h1 class="text-3xl font-bold text-white mb-1">和兴国际物流</h1>
                     <p class="text-blue-200 text-base">内部工具平台</p>
                 </div>
 
@@ -91,7 +91,7 @@
                             <path d="M12 10.5v6"/>
                         </svg>
                     </div>
-                    <h2 class="text-xl font-bold text-gray-900">易和国际物流</h2>
+                    <h2 class="text-xl font-bold text-gray-900">和兴国际物流</h2>
                     <p class="text-gray-400 text-sm mt-0.5">内部工具平台</p>
                     <p class="text-gray-500 text-sm mt-3">请登录您的账号</p>
                 </div>
@@ -108,7 +108,7 @@
                             </svg>
                         </div>
                         <div>
-                            <h2 class="text-lg font-bold text-gray-900">易和国际物流</h2>
+                            <h2 class="text-lg font-bold text-gray-900">和兴国际物流</h2>
                             <p class="text-xs text-gray-400">内部工具平台</p>
                         </div>
                     </div>
@@ -174,7 +174,7 @@
                 </form>
 
                 <p class="mt-8 text-center text-xs text-gray-400">
-                    &copy; {{ date('Y') }} 易和国际物流 · 内部工具平台
+                    &copy; {{ date('Y') }} 和兴国际物流 · 内部工具平台
                 </p>
             </div>
         </div>
